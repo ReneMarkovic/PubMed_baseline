@@ -1,4 +1,3 @@
 # Auto detect text files and perform LF normalization
 #add pubmed_baseline folder to ignore list
-pubmed_baseline/
 * text=auto
