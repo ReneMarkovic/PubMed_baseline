@@ -43,7 +43,7 @@ class FETCH_DATA:
         list_items = base_soup.find_all("a", href=re.compile(r"\.xml\.gz$"))
         print(f"From the fpt server {len(list_items)} fileswill be obtained")
         print("")
-        num_files = int(input("how many files do you want to download? (0->all):"))
+        num_files = input("how many files do you want to download? (0->all):")
         num_files = int(num_files) if num_files.isdigit() and int(num_files) != 0 else len(list_items)
         return list_items[:num_files]
     
@@ -82,9 +82,10 @@ class FETCH_DATA:
     def extract_file(self,file):
         # Specify the file paths
         gz_file_path = file
+        print(file)
         filename = os.path.basename(gz_file_path)
         xml_file = filename.replace('.gz', '')  # Removing the .gz extension
-        xml_file_path = self.data_xml_folder + xml_file
+        xml_file_path = os.path.join(self.data_xml_folder,xml_file)
 
         if xml_file in os.listdir(self.data_xml_folder):
             return f"{xml_file_path} already exists."
@@ -97,15 +98,18 @@ class FETCH_DATA:
     
     def extract_data(self):
         gzip_file = [file for file in os.listdir(self.data_raw_folder) if file.endswith(".gz")]
-        with ProcessPoolExecutor() as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.nw) as executor:
             # Prepare the paths for the gzip files
             gzip_file_paths = [os.path.join(self.data_raw_folder, file) for file in gzip_file]
-            # Start the progress bar
+            print(gzip_file_paths)
             pbar = tqdm(total=len(gzip_file_paths), desc="Extracting files")
-            # Submit tasks to the executor
-            futures = {executor.submit(self.extract_file, gz_file_path): gz_file_path for gz_file_path in gzip_file_paths}
+            #futures = {executor.submit(self.extract_file, path): path for path in gzip_file_paths}
+            futures = [executor.submit(self.extract_file, path) for path in gzip_file_paths]
             # As each future completes, update the progress bar
-            for future in concurrent.futures.as_completed(futures):
+            '''for future in concurrent.futures.as_completed(futures):
+                pbar.update(1)'''
+            for i, future in enumerate(concurrent.futures.as_completed(futures)):
+                pbar.desc = future.result()
                 pbar.update(1)
             pbar.close()
         print("File extraction complete")

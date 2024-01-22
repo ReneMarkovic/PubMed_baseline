@@ -1,3 +1,4 @@
 from pypub import pypub_fetcher as pp
 
-web_miner = pp.FETCH_DATA()
+if __name__=="__main__":
+    web_miner = pp.FETCH_DATA()

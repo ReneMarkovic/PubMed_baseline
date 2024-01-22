@@ -1,2 +1,7 @@
 venv/
 pubmed_baseline/
+pubmed_xml/
+pubmed_results/
+pubmed_temp/
+*.xml
+*.gz
