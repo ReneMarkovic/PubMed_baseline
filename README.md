@@ -9,7 +9,9 @@ The `FETCH_DATA` class is designed to automate the process of downloading and ex
 
 Before using the FETCH_DATA class, ensure you have the following:
 
-Python 3.x installed on your system.
+- **Enaught free space (400 GB):** The NCBI PubMed baseline dataset is approximately 20 GB in size. The extracted .xml files are approximately 380 GB in size. Ensure you have enough free space on your system to store the files. 
+
+- **Python 3.x installed on your system:**. In addition to Python, you will need the following libraries installed in your Python environment. You can install these with the following command:
 requests, bs4 (BeautifulSoup4), tqdm, and concurrent.futures libraries installed in your Python environment. You can install these with the following command:
 
 ```
